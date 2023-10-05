@@ -1,9 +1,80 @@
 <!DOCTYPE html>
 <html>
-    <head></head>
+<head>
+    <title>Dice Roller</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
     <body>
-        <h1>Hi mom</h1>
-        <div id="root"></div>
-        <script src="./App.js"></script>
+        <h1>Dice Roller</h1>
+        <form id="diceForm">
+            <label for="diceType">Select a Dice:</label>
+            <select id="diceType" name="diceType">
+                <option value="4">4-sided</option>
+                <option value="6">6-sided</option>
+                <option value="8">8-sided</option>
+                <option value="10">10-sided</option>
+                <option value="12">12-sided</option>
+                <option value="20">20-sided</option>
+            </select>
+
+            <label for="numDice">Number of Dice:</label>
+            <input type="number" id="numDice" name="numDice" min="1" value="1">
+
+            <button type="button" id="rollButton">Roll</button>
+        </form>
+
+        <div id="result"></div>
+    <script>
+            document.getElementById('rollButton').addEventListener('click', function() {
+                // Get selected dice type and number of dice
+                const diceType = parseInt(document.getElementById('diceType').value);
+                const numDice = parseInt(document.getElementById('numDice').value);
+
+                // Roll the dice and count occurrences of each face
+                const results = [];
+                const counts = Array.from({ length: diceType }, () => 0);
+
+                for (let i = 0; i < numDice; i++) {
+                    const roll = Math.floor(Math.random() * diceType) + 1;
+                    results.push(roll);
+                    counts[roll - 1]++;
+                }
+
+                // Create a table to display the results and counts
+                const table = document.createElement('table');
+                const headerRow = table.insertRow();
+                const resultHeader = headerRow.insertCell(0);
+                resultHeader.textContent = 'Result';
+                const countHeader = headerRow.insertCell(1);
+                countHeader.textContent = 'Count';
+
+                for (let i = 0; i < diceType; i++) {
+                    if (counts[i] > 0) {
+                        const row = table.insertRow();
+                        const resultCell = row.insertCell(0);
+                        const countCell = row.insertCell(1);
+                        resultCell.textContent = i + 1;
+                        countCell.textContent = counts[i];
+                    }
+                }
+
+                // Clear the result div and append the table
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = '';
+                resultDiv.appendChild(table);
+            });
+        </script>
     </body>
 </html>
